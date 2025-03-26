@@ -2,15 +2,22 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import check_password_hash
 from datetime import datetime, timezone
 import uuid
+from dotenv import load_dotenv
+load_dotenv()
 import os
 from db import db, init_db
 from models import Empleado, UsuarioRRHH, Conversacion
 from chat import get_chat_response
 
 app = Flask(__name__)
-app.secret_key = "tu_clave_secreta_segura"
+app.secret_key = os.getenv("SECRET_KEY")
+
+# Asegurar que la carpeta 'instance' exista y crear la base si no existe
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(basedir, 'instance', 'empleados.db')}"
+db_folder = os.path.join(basedir, 'instance')
+os.makedirs(db_folder, exist_ok=True)
+db_path = os.path.join(db_folder, 'empleados.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
