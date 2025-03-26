@@ -1,4 +1,5 @@
 flask
-sqlalchemy
-werkzeug
+flask_sqlalchemy
+jinja2
 gunicorn
+werkzeug
