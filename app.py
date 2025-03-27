@@ -1,15 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, timezone
 import uuid
-from dotenv import load_dotenv
-load_dotenv()
 import os
 from db import db, init_db
 from models import Empleado, UsuarioRRHH, Conversacion
 from chat import get_chat_response
 
 app = Flask(__name__)
+from dotenv import load_dotenv
+load_dotenv()
 app.secret_key = os.getenv("SECRET_KEY")
 
 # Asegurar que la carpeta 'instance' exista y crear la base si no existe
@@ -24,6 +24,19 @@ db.init_app(app)
 
 with app.app_context():
     init_db()
+
+@app.route('/crear_admin_temporal')
+def crear_admin_temporal():
+    if UsuarioRRHH.query.filter_by(email="admin@talent.com").first():
+        return "El usuario ya existe."
+
+    nuevo = UsuarioRRHH(
+        email="admin@talent.com",
+        password=generate_password_hash("admin123")
+    )
+    db.session.add(nuevo)
+    db.session.commit()
+    return "✅ Usuario admin creado con éxito. Usá admin@talent.com / admin123"
 
 @app.route('/')
 def index():
