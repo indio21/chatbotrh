@@ -38,6 +38,24 @@ def crear_admin_temporal():
     db.session.commit()
     return "✅ Usuario admin creado con éxito. Usá admin@talent.com / admin123"
 
+@app.route('/crear_empleado_temporal')
+def crear_empleado_temporal():
+    if Empleado.query.filter_by(email="empleado@talent.com").first():
+        return "El empleado ya existe."
+
+    nuevo = Empleado(
+        nombre="Empleado Admin",
+        email="empleado@talent.com",
+        password=generate_password_hash("empleado123"),
+        vacaciones=20,
+        sueldo=1800000,
+        antiguedad=5,
+        fecha_ingreso="2020-01-10"
+    )
+    db.session.add(nuevo)
+    db.session.commit()
+    return "✅ Empleado creado con éxito. Usá empleado@talent.com / empleado123"
+
 @app.route('/')
 def index():
     return redirect(url_for('inicio'))
