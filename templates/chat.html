@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat con Ruby</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_chat.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">
+            <div class="header-bg"></div>
+            <img src="{{ url_for('static', filename='rubi.jpeg') }}" class="ruby-avatar-top" alt="Ruby">
+            <h1 class="ruby-title">RUBY</h1>
+        </div>
+
+        <div class="chat-box" id="chat-box">
+            {% for mensaje in mensajes %}
+                <div class="mensaje {{ 'usuario' if mensaje['autor'] == 'usuario' else 'ruby' }}">
+                    {% if mensaje['autor'] == 'ruby' %}
+                        <img src="{{ url_for('static', filename='rubi.jpeg') }}" class="avatar" alt="Ruby">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='rrhh.jpeg') }}" class="avatar avatar-usuario" alt="Usuario">
+                    {% endif %}
+                    <div class="burbuja">{{ mensaje['texto'] }}</div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <form id="chat-form" method="POST" class="chat-form" action="{{ url_for('chat') }}">
+            <input type="text" name="pregunta" placeholder="Escribí tu mensaje..." required>
+            <button type="submit" class="btn-enviar">😊</button>
+        </form>
+    </div>
+</body>
+</html>

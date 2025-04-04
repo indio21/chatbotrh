@@ -11,63 +11,176 @@
       font-family: 'Segoe UI', sans-serif;
       min-height: 100vh;
     }
-    .chat-box {
-      background-color: rgba(255, 255, 255, 0.05);
-      border-radius: 1rem;
-      padding: 2rem;
+
+    .container {
+      background: #3b0a6d;
+      max-width: 900px;
+      padding-top: 0rem !important;
     }
+    
+    .chat-box {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      height: auto;
+      background-color: #b66ed9; /* Fondo lila como el ejemplo */
+      border-radius: 0px 0px 0px 0px;
+      overflow: hidden;
+    }
+
     .message {
       padding: 0.5rem 1rem;
       margin-bottom: 1rem;
       border-radius: 1rem;
       max-width: 75%;
+
     }
+
     .user-message {
-      background-color: #4e8cff;
-      color: white;
+      background-color:rgb(255, 255, 255);
+      color: black;
       margin-left: auto;
+      margin-top:10px;
+      margin-righ:10px;
     }
     .bot-message {
-      background-color: #343a40;
-      color: white;
+      background-color:rgb(255, 255, 255);
+      color: black;
       margin-right: auto;
+      margin-left:10px;
     }
-    .form-control {
-      border-radius: 2rem;
-    }
+   
     .btn-send {
       border-radius: 2rem;
       padding: 0.5rem 2rem;
     }
+    /* Header Ruby */
+
+    .header {
+      position: relative;
+      text-align: center;
+      height: 140px;
+      border-radius: 20px 10px 50px 30px;
+      max-width: 900px;
+    }
+
+    .header-bg {
+      background: linear-gradient( #83c3dc 50%, #9c53c5 50%);
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      z-index: 1;
+      border-radius: 10px 10px 0px 0px;
+      max-width: 900px;
+    }
+
+  .ruby-avatar-top {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      position: relative;
+      z-index: 2;
+      top: 20px;
+  }
+
+  .ruby-title {
+    color: white;
+    position: relative;
+    z-index: 2;
+    margin-top: 30px;
+    font-size: 26px;
+    background-color: #9c53c5;
+  }
+
+
+.chat-form {
+    background-color: #b66ed9;
+    border-top: 2px solid #a84ecc;
+}
+
+.burbuja {
+  background-color: #ffffff;
+  padding: 12px 18px;
+  border-radius: 20px;
+  max-width: 75%;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #333;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  word-wrap: break-word;
+}
+
+.mensaje {
+    display: flex;
+    align-items: flex-start;
+}
+
+.mensaje.ruby {
+    flex-direction: row;
+}
+
+.mensaje.usuario {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 0 10px;
+}
+
+.img-usuario {
+  flex-direction: row-reverse;
+}
+ 
+
+
   </style>
 </head>
 <body>
   <div class="container py-5">
-    <h2 class="text-center mb-4">💬 Chatbot - Talent HR</h2>
-    {% if session.get('usuario_rrhh') %}
-      <p class="text-center text-white">Sesión activa: <strong>RRHH - {{ session['usuario_rrhh'] }}</strong></p>
-    {% elif empleado %}
-      <p class="text-center text-white">Sesión activa: <strong>{{ empleado.nombre }}</strong></p>
-    {% endif %}
+    <div class="header">
+      <div class="header-bg"></div>
+      <img src="{{ url_for('static', filename='rubi.jpeg') }}" class="ruby-avatar-top" alt="Ruby">
+      <h1 class="ruby-title">RUBY</h1>
 
-    <form id="chat-form" class="mt-4" method="POST">
-        <div class="input-group">
+  </div>
+    
+
+    <form id="chat-form" class="chat-form " method="POST">
+      {% if session.get('usuario_rrhh') %}
+      <p class="text-center text-white" style="background:  #9c53c5; margin-top:10px">Sesión activa: <strong>RRHH - {{ session['usuario_rrhh'] }}</strong></p>
+    {% elif empleado %}
+      <p class="text-center text-white" style="background:  #9c53c5;>Sesión activa: <strong>{{ empleado.nombre }}</strong></p>
+    {% endif %}
+        <div class="input-group" style="border-radius: 0px;">
           <input type="text" name="user_input" id="user_input" class="form-control" placeholder="Escribí tu mensaje..." required>
           <button type="submit" class="btn btn-primary btn-send">Enviar</button>
         </div>
       </form>
   
 
-    <div class="chat-box">
+    <div class="chat-box" id="chat-box">
       {% for m in mensajes %}
-        <div class="d-flex {{ 'justify-content-end' if m.remitente == 'usuario' else 'justify-content-start' }}">
-          <div class="message {{ 'user-message' if m.remitente == 'usuario' else 'bot-message' }}">
-            {{ m.mensaje }}
+        <div class="d-flex {{ 'img-usuario' if m.remitente == 'usuario' else 'justify-content-start' }}">
+          {% if m.remitente == 'usuario' %}
+                         <img src="{{ url_for('static', filename='rrhh.jpeg') }}" class="avatar avatar-usuario" alt="Usuario">
+                    {% else %}
+                           <img src="{{ url_for('static', filename='rubi.jpeg') }}" class="avatar" alt="Ruby">
+                    {% endif %}    
+          <div class="message {{ 'user-message' if m.remitente == 'usuario' else 'bot-message' }}">   
+                  
+                {{ m.mensaje }}
             <div class="small text-end mt-1 text-white-50">{{ m.timestamp.strftime('%H:%M') }}</div>
           </div>
         </div>
       {% endfor %}
     </div>
+
+    
 
 
     <div class="text-center mt-4">

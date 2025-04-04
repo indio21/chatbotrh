@@ -162,5 +162,14 @@ def historial_empleado():
     mensajes = Conversacion.query.filter_by(session_id=session['session_id']).order_by(Conversacion.timestamp.asc()).all()
     return render_template('historial_empleado.html', mensajes=mensajes)
 
+@app.route("/chat", methods=["GET", "POST"])
+def chat():
+    if request.method == "POST":
+        mensaje = request.form["mensaje"]
+        # Acá iría tu lógica del bot (respuesta)
+        respuesta = "Esto es una respuesta simulada."  # Ejemplo
+        return render_template("chat.html", pregunta=mensaje, respuesta=respuesta)
+    return render_template("chat.html")
+
 if __name__ == '__main__':
     app.run(debug=True)

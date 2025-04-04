@@ -1,26 +1,135 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login RRHH - Talent HR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #3a1c5b;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-{% block title %}Ingreso RRHH - Talent HR{% endblock %}
+        .login_container {
+            width: 900px;
+            height: 500px;
+            background-image: url("static/fondo.jpeg");
+            background-size: cover;
+            background-position: center;
+            margin: 80px auto;
+            border-radius: 10px;
+            display: flex;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
 
-{% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <div class="card p-4 bg-dark text-white">
-      <h3 class="text-center mb-4">🔐 Ingreso RRHH</h3>
-      <form method="POST">
-        <div class="mb-3">
-          <label for="email" class="form-label">Correo electrónico</label>
-          <input type="email" class="form-control" id="email" name="email" required>
+        .login_left {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login_left img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 50%;
+            background-color: #1e0c2e;
+        }
+
+        .socials {
+            margin-top: 30px;
+        }
+
+        .socials i {
+            font-size: 24px;
+            margin: 0 10px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .login_right {
+            width: 50%;
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login_right h1 {
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+
+        .form_input {
+            background-color: transparent;
+            border: 2px solid white;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 16px;
+            width: 70%;
+            border-radius: 5px;
+        }
+
+        .form_input::placeholder {
+            color: #e0d5f7;
+        }
+
+        .form_input:focus {
+            outline: none;
+            border-color: #d4bfff;
+        }
+
+        .forgot_link {
+            font-size: 12px;
+            text-align: right;
+            margin-top: -15px;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        .login_button {
+            background-color: transparent;
+            border: 2px solid #d4bfff;
+            padding: 10px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .login_button:hover {
+            background-color: #d4bfff;
+            color: #3a1c5b;
+        }
+    </style>
+</head>
+<body>
+    <div class="login_container">
+        <div class="login_left">
+            <img src="static/rubi.jpeg" alt="Ruby">
+            <div class="socials">
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-twitter"></i>
+            </div>
         </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Contraseña</label>
-          <input type="password" class="form-control" id="password" name="password" required>
+        <div class="login_right">
+            <h1>¡HOLA, SOY RUBY!</h1>
+            <form method="POST" >
+                <input type="text" name="email" placeholder="USUARIO" class="form_input" style="background-color: transparent;" required>
+                <input type="password" name="password" placeholder="CONTRASEÑA" class="form_input" required>
+                <div class="forgot_link">olvidé mi contraseña</div>
+                <button type="submit" class="login_button">INGRESAR</button>
+            </form>
         </div>
-        <div class="d-grid">
-          <button type="submit" class="btn btn-primary">Ingresar</button>
-        </div>
-      </form>
     </div>
-  </div>
-</div>
-{% endblock %}
+</body>
+</html>
