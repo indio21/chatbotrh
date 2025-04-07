@@ -1,31 +1,35 @@
+from app import app
+from models import db, Empleado
 from werkzeug.security import generate_password_hash
-from app import app, db
-from models import Empleado
-
-# Ingreso de datos
-nombre = input("👤 Nombre completo del empleado: ")
-email = input("📧 Correo electrónico: ")
-password = input("🔐 Contraseña: ")
-vacaciones = int(input("🏖️ Días de vacaciones: "))
-sueldo = int(input("💰 Sueldo: "))
-antiguedad = int(input("📅 Años de antigüedad: "))
-fecha_ingreso = input("🗓️ Fecha de ingreso (YYYY-MM-DD): ")
-
-hashed_password = generate_password_hash(password)
+from datetime import date
 
 with app.app_context():
+    # Datos del nuevo empleado
+    nombre = "Carlos"
+    email = "carlos@empresa.com"
+    password_plana = "carlos123"
+    vacaciones = 10
+    sueldo = 50000
+    antiguedad = 2
+    fecha_ingreso = date(2022, 6, 15)
+    sanciones = "Ninguna"
+    referencias = "Buena conducta y compromiso"
+
+    # Verificar si ya existe
     if Empleado.query.filter_by(email=email).first():
-        print("❌ Ya existe un empleado con ese email.")
+        print("⚠️ El empleado ya existe.")
     else:
-        nuevo = Empleado(
+        nuevo_empleado = Empleado(
             nombre=nombre,
             email=email,
-            password=hashed_password,
+            password=generate_password_hash(password_plana),
             vacaciones=vacaciones,
             sueldo=sueldo,
             antiguedad=antiguedad,
-            fecha_ingreso=fecha_ingreso
+            fecha_ingreso=fecha_ingreso,
+            sanciones=sanciones,
+            referencias=referencias
         )
-        db.session.add(nuevo)
+        db.session.add(nuevo_empleado)
         db.session.commit()
-        print("✅ Empleado creado correctamente.")
+        print(f"✅ Empleado creado: {email}")

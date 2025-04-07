@@ -165,7 +165,7 @@
 
     <div class="chat-box" id="chat-box">
       {% for m in mensajes %}
-        <div class="d-flex {{ 'img-usuario' if m.remitente == 'usuario' else 'justify-content-start' }}">
+        <div class="d-flex {{ 'img-usuario' if m.remitente == 'usuario' else 'justify-content-start' }}" style="margin-top:10px;">
           {% if m.remitente == 'usuario' %}
                          <img src="{{ url_for('static', filename='rrhh.jpeg') }}" class="avatar avatar-usuario" alt="Usuario">
                     {% else %}

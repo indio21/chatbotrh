@@ -12,6 +12,8 @@ class Empleado(db.Model):
     sueldo = db.Column(db.Integer, nullable=False)
     antiguedad = db.Column(db.Integer, nullable=True)
     fecha_ingreso = db.Column(db.String(20), nullable=True)
+    sanciones = db.Column(db.Text, nullable=True)  # ✅ NUEVO CAMPO
+    referencias = db.Column(db.Text, nullable=True)  # ✅ NUEVO CAMPO
 
 class UsuarioRRHH(db.Model):
     __tablename__ = "usuarios_rrhh"
