@@ -78,19 +78,22 @@ def login_rrhh():
             flash('Correo o contraseña incorrectos', 'danger')
     return render_template('login_rrhh.html')
 
-@app.route('/login_empleado', methods=['GET', 'POST'])
+@app.route("/login_empleado", methods=["GET", "POST"])
 def login_empleado():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+
         empleado = Empleado.query.filter_by(email=email).first()
+
         if empleado and check_password_hash(empleado.password, password):
-            session['empleado_id'] = empleado.id
-            session['session_id'] = str(uuid.uuid4())
-            return redirect(url_for('empleado_chat'))
+            session["empleado_id"] = empleado.id
+            session["session_id"] = f"empleado_{empleado.id}"
+            return redirect(url_for("empleado_chat"))
         else:
-            flash('Correo o contraseña incorrectos', 'danger')
-    return render_template('login_empleado.html')
+            flash("Usuario o contraseña incorrectos")
+
+    return render_template("login_empleado.html")
 
 @app.route('/chat_rrhh', methods=['GET', 'POST'])
 def chat_rrhh():
@@ -109,6 +112,15 @@ def chat_rrhh():
         return redirect(url_for('chat_rrhh'))
 
     mensajes = Conversacion.query.filter_by(session_id=session['session_id']).order_by(Conversacion.timestamp.asc()).all()
+
+    # Mensaje inicial si no hay mensajes aún
+    if not mensajes:
+        bienvenida = "Hola, sobre qué colaborador quieres información?"
+        mensaje_inicial = Conversacion(remitente='bot', mensaje=bienvenida, session_id=session['session_id'], timestamp=datetime.now(timezone.utc))
+        db.session.add(mensaje_inicial)
+        db.session.commit()
+        mensajes.append(mensaje_inicial)
+
     return render_template('index.html', mensajes=mensajes)
 
 @app.route('/empleado_chat', methods=['GET', 'POST'])
@@ -128,8 +140,19 @@ def empleado_chat():
         return redirect(url_for('empleado_chat'))
 
     mensajes = Conversacion.query.filter_by(session_id=session['session_id']).order_by(Conversacion.timestamp.asc()).all()
+
+    # Mensaje inicial si no hay mensajes aún
+    if not mensajes:
+        bienvenida = "Hola, que información necesitarías?"
+        mensaje_inicial = Conversacion(remitente='bot', mensaje=bienvenida, session_id=session['session_id'], timestamp=datetime.now(timezone.utc))
+        db.session.add(mensaje_inicial)
+        db.session.commit()
+        mensajes.append(mensaje_inicial)
+
     empleado = Empleado.query.get(session['empleado_id'])
     return render_template('index.html', mensajes=mensajes, empleado=empleado)
+
+
 
 @app.route('/reiniciar')
 def reiniciar():
@@ -164,12 +187,33 @@ def historial_empleado():
 
 @app.route("/chat", methods=["GET", "POST"])
 def chat():
+    if "usuario_rrhh" in session:
+        autor_usuario = "rrhh"
+        mensaje_inicial = {"autor": "ruby", "texto": "Hola, sobre qué colaborador quieres información?"}
+    elif "empleado_id" in session:
+        autor_usuario = "empleado"
+        mensaje_inicial = {"autor": "ruby", "texto": "Hola, me dirías tu Nombre y Apellido? Gracias!"}
+    else:
+        return redirect(url_for("login_rrhh"))  # o a login_empleado si lo preferís
+
+    # Inicialización de la conversación si no hay mensajes previos
+    if "mensajes" not in session:
+        session["mensajes"] = [mensaje_inicial]
+
     if request.method == "POST":
         mensaje = request.form["mensaje"]
-        # Acá iría tu lógica del bot (respuesta)
-        respuesta = "Esto es una respuesta simulada."  # Ejemplo
-        return render_template("chat.html", pregunta=mensaje, respuesta=respuesta)
-    return render_template("chat.html")
+
+        # Acá va tu función real (por ahora una simulada)
+        # respuesta = obtener_respuesta(mensaje, autor_usuario)
+        respuesta = f"Respuesta simulada a: {mensaje}"
+
+        session["mensajes"].append({"autor": "usuario", "texto": mensaje})
+        session["mensajes"].append({"autor": "ruby", "texto": respuesta})
+
+    return render_template("chat.html", mensajes=session["mensajes"])
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

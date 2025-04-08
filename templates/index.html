@@ -24,7 +24,10 @@
       display: flex;
       flex-direction: column;
       height: auto;
-      background-color: #b66ed9; /* Fondo lila como el ejemplo */
+      /* background-color: #b66ed9; */
+      background-image: url("/static/f1.jpeg");
+      background-size: cover;
+      background-repeat: no-repeat;
       border-radius: 0px 0px 0px 0px;
       overflow: hidden;
     }
@@ -154,10 +157,11 @@
       {% if session.get('usuario_rrhh') %}
       <p class="text-center text-white" style="background:  #9c53c5; margin-top:10px">Sesión activa: <strong>RRHH - {{ session['usuario_rrhh'] }}</strong></p>
     {% elif empleado %}
-      <p class="text-center text-white" style="background:  #9c53c5;>Sesión activa: <strong>{{ empleado.nombre }}</strong></p>
+    <p class="text-center text-white" style="background:  #9c53c5; margin-top:10px">Sesión activa: <strong>{{ empleado.nombre }}</strong></p>
+
     {% endif %}
         <div class="input-group" style="border-radius: 0px;">
-          <input type="text" name="user_input" id="user_input" class="form-control" placeholder="Escribí tu mensaje..." required>
+          <input type="text" name="user_input" id="user_input" class="form-control" placeholder="Escriba su consulta..." required>
           <button type="submit" class="btn btn-primary btn-send">Enviar</button>
         </div>
       </form>
@@ -165,25 +169,28 @@
 
     <div class="chat-box" id="chat-box">
       {% for m in mensajes %}
-        <div class="d-flex {{ 'img-usuario' if m.remitente == 'usuario' else 'justify-content-start' }}" style="margin-top:10px;">
+      <div class="d-flex {{ 'img-usuario' if m.remitente == 'usuario' else 'justify-content-start' }}" style="margin-top:10px;">
           {% if m.remitente == 'usuario' %}
-                         <img src="{{ url_for('static', filename='rrhh.jpeg') }}" class="avatar avatar-usuario" alt="Usuario">
-                    {% else %}
-                           <img src="{{ url_for('static', filename='rubi.jpeg') }}" class="avatar" alt="Ruby">
-                    {% endif %}    
+              {% if session.get('usuario_rrhh') %}
+                  <img src="{{ url_for('static', filename='rrhh.jpeg') }}" class="avatar avatar-usuario" alt="Usuario RRHH">
+              {% elif session.get('empleado_id') %}
+                  <img src="{{ url_for('static', filename='emple.jpg') }}" class="avatar avatar-usuario" alt="Empleado">
+              {% endif %}
+          {% else %}
+              <img src="{{ url_for('static', filename='rubi.jpeg') }}" class="avatar" alt="Ruby">
+          {% endif %}
+  
           <div class="message {{ 'user-message' if m.remitente == 'usuario' else 'bot-message' }}">   
-                  
-                {{ m.mensaje }}
-            <div class="small text-end mt-1 text-white-50">{{ m.timestamp.strftime('%H:%M') }}</div>
+              {{ m.mensaje }}
+              <div class="small text-end mt-1 text-white-50">{{ m.timestamp.strftime('%H:%M') }}</div>
           </div>
-        </div>
-      {% endfor %}
+      </div>
+  {% endfor %}
     </div>
 
     
 
-
-    <div class="text-center mt-4">
+<div class="text-center mt-4">
       {% if session.get('usuario_rrhh') %}
         <a href="/historial" class="btn btn-outline-light me-2">📜 Ver historial</a>
         <a href="/reiniciar" class="btn btn-warning me-2">🔄 Nueva conversación</a>
@@ -192,7 +199,7 @@
         <a href="/historial_empleado" class="btn btn-outline-light me-2">📜 Ver historial</a>
         <a href="/reiniciar" class="btn btn-warning me-2">🔄 Nueva conversación</a>
         <a href="/logout_empleado" class="btn btn-outline-danger">🚪 Cerrar sesión</a>
-      {% endif %}
+      {% endif %} 
     </div>
   </div>
 </body>

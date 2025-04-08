@@ -14,20 +14,22 @@
         </div>
 
         <div class="chat-box" id="chat-box">
-            {% for mensaje in mensajes %}
-                <div class="mensaje {{ 'usuario' if mensaje['autor'] == 'usuario' else 'ruby' }}">
-                    {% if mensaje['autor'] == 'ruby' %}
-                        <img src="{{ url_for('static', filename='rubi.jpeg') }}" class="avatar" alt="Ruby">
-                    {% else %}
-                        <img src="{{ url_for('static', filename='rrhh.jpeg') }}" class="avatar avatar-usuario" alt="Usuario">
-                    {% endif %}
-                    <div class="burbuja">{{ mensaje['texto'] }}</div>
-                </div>
-            {% endfor %}
+            {% if mensajes %}
+                {% for mensaje in mensajes %}
+                    <div class="mensaje {{ 'usuario' if mensaje['autor'] == 'usuario' else 'ruby' }}">
+                        {% if mensaje['autor'] == 'ruby' %}
+                            <img src="{{ url_for('static', filename='rubi.jpeg') }}" class="avatar" alt="Ruby">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='rrhh.jpeg') }}" class="avatar avatar-usuario" alt="Usuario">
+                        {% endif %}
+                        <div class="burbuja">{{ mensaje['texto'] }}</div>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
 
         <form id="chat-form" method="POST" class="chat-form" action="{{ url_for('chat') }}">
-            <input type="text" name="pregunta" placeholder="Escribí tu mensaje..." required>
+            <input type="text" name="mensaje" placeholder="Escribí tu mensaje..." required>
             <button type="submit" class="btn-enviar">😊</button>
         </form>
     </div>
