@@ -22,7 +22,7 @@ def get_chat_response(user_input):
             return f"Tenés {empleado.antiguedad} años de antigüedad."
         elif any(p in pregunta for p in ["ingreso", "entraste", "inicio", "empezaste","entré","ingrese","arranque"]):
             return f"Ingresaste a la empresa el {empleado.fecha_ingreso}."
-        elif any(p in pregunta for p in ["referencias","laborales","recomendaciones","referencia","trayectoria","observaciones"]):
+        elif any(p in pregunta for p in ["referencias","laborales","recomendaciones","referencia","trayectoria","observaciones","legajo"]):
             return f"Sus referencias laborales son: {empleado.referencias}."
         elif any(p in pregunta for p in ["sanciones","multas","suspendido","suspension","sancion","sancionado"]):
             return f"Sus sanciones son: {empleado.sanciones}."
@@ -47,15 +47,15 @@ def get_chat_response(user_input):
                 if "vacaciones" in pregunta or "dias" in pregunta or "licencia" in pregunta or "dispone" in pregunta or "días" in pregunta or "quedan" in pregunta:
                     return f"{mensaje_intro}{emp.nombre} tiene {emp.vacaciones} días de vacaciones."
                 elif "gremio" in pregunta or "gremial" in pregunta or "día gremial" in pregunta:
-                    return f"Se considera como 'Dia del Trabajador del Automor' los días 24 de Febrero."
+                    return f"Se considera como 'Dia del Trabajador del Automotor' los días 24 de Febrero."
                 elif any(p in pregunta for p in ["sueldo","cobro","renumeracion","plata","dinero","cobra","salario","cobró"]):
                     return f"{mensaje_intro}{emp.nombre} tiene un sueldo de ${emp.sueldo}."
                 elif any(p in pregunta for p in ["antiguedad","tiempo","estoy","periodo"]):
                     return f"{mensaje_intro}{emp.nombre} tiene {emp.antiguedad} años de antigüedad." 
                 elif any(p in pregunta for p in ["referencias","laborales","recomendaciones","referencia","trayectoria","observaciones"]):
-                    return f"Sus referencias laborales son: {emp.referencias}."
+                    return f" {emp.referencias}." if emp.referencias else "No registra referencias."
                 elif any(p in pregunta for p in ["sanciones","multas","suspendido","suspension","sancion","sancionado"]):
-                    return f"Sus sanciones son: {emp.sanciones}."
+                    return f" {emp.sanciones}." if emp.sanciones else "No registra sanciones."
                 elif any(p in pregunta for p in ["ingreso", "entraste", "inicio", "empezaste","entré","ingrese","arranque","fecha"]):
                     return f"{mensaje_intro}{emp.nombre} ingresó el {emp.fecha_ingreso}."
                 elif "mudanza" in pregunta or "permiso" in pregunta:
@@ -75,13 +75,13 @@ def get_chat_response(user_input):
                 elif any(p in pregunta for p in ["antiguedad","tiempo","estoy","periodo"]):
                     return f"{emp.nombre} tiene {emp.antiguedad} años de antigüedad."
                 elif any(p in pregunta for p in ["sanciones","multas","suspendido","suspension","sancion","sancionado"]):
-                    return f"Sus sanciones son: {emp.sanciones}."
+                    return f"{emp.sanciones}" if emp.sanciones else "No registra sanciones."
                 elif any(p in pregunta for p in ["referencias","laborales","recomendaciones","referencia","trayectoria","observaciones"]):
-                    return f"Sus referencias laborales son: {emp.referencias}."
+                    return f" {emp.referencias}." if emp.referencias else "No registra referencias."
                 elif any(p in pregunta for p in ["ingreso", "entraste", "inicio", "empezaste","entré","ingrese","arranque","fecha"]):
                     return f"Ingresó el {emp.fecha_ingreso}."
                 elif "gremio" in pregunta or "gremial" in pregunta or "día gremial" in pregunta:
-                    return f"Se considera como 'Dia del Trabajador del Automor' los días 24 de Febrero."
+                    return f"Se considera como 'Dia del Trabajador del Automotor' los días 24 de Febrero."
                 elif "mudanza" in pregunta:
                     return f"El establecimiento otorgará un (1) día de permiso pago al personal que deba mudarse de vivienda, con excepción de aquellos que vivan en hotel o pensión."
 
