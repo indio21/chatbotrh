@@ -3,6 +3,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, timezone
 import uuid
 import os
+import pandas as pd
 from db import db, init_db
 from models import Empleado, UsuarioRRHH, Conversacion
 from chat import get_chat_response
@@ -22,8 +23,46 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
+def importar_empleados():
+    # Ruta del archivo Excel
+    archivo_excel = 'empleados.xlsx'
+
+    if os.path.exists(archivo_excel):
+        df = pd.read_excel(archivo_excel)
+
+        # Limpiar y normalizar nombres de columnas
+        df.columns = [col.strip().lower().replace(' ', '_') for col in df.columns]
+
+        # Convertir la columna 'fecha_ingreso' a formato de fecha
+        df['fecha_ingreso'] = pd.to_datetime(df['fecha_ingreso'], errors='coerce').dt.date
+
+        # Iterar sobre las filas del DataFrame e importar empleados
+        for _, row in df.iterrows():
+            if not Empleado.query.filter_by(email=row['email']).first():
+                nuevo_empleado = Empleado(
+                    nombre=row['nombre'],
+                    email=row['email'],
+                    password=generate_password_hash('1234'),  # Contraseña fija
+                    fecha_ingreso=row['fecha_ingreso'],
+                    antiguedad=row['antiguedad'],
+                    vacaciones=row['vacaciones'],
+                    pendientes=row['pendientes'],
+                    sueldo=row['sueldo'],
+                    puesto=row['puesto'],
+                    sanciones=row['sanciones'],
+                    referencias=row['referencias'],
+                    trayectoria=row['trayectoria'],
+                    cursos=row['cursos']
+                )
+                db.session.add(nuevo_empleado)
+        db.session.commit()
+        print('✅ Empleados importados correctamente.')
+    else:
+        print('⚠️ No se encontró el archivo empleados.xlsx.')
+
 with app.app_context():
     init_db()
+    importar_empleados()
 
 @app.route('/crear_admin_temporal')
 def crear_admin_temporal():
@@ -91,7 +130,9 @@ def login_empleado():
             session["session_id"] = f"empleado_{empleado.id}"
             return redirect(url_for("empleado_chat"))
         else:
-            flash("Usuario o contraseña incorrectos")
+            flash(f'Usuario o contraseña incorrectos: {password}, {email}')
+            
+
 
     return render_template("login_empleado.html")
 
@@ -211,9 +252,6 @@ def chat():
         session["mensajes"].append({"autor": "ruby", "texto": respuesta})
 
     return render_template("chat.html", mensajes=session["mensajes"])
-
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

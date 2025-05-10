@@ -8,12 +8,17 @@ class Empleado(db.Model):
     nombre = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(128))  # contraseña hasheada
-    vacaciones = db.Column(db.Integer, nullable=False)
-    sueldo = db.Column(db.Integer, nullable=False)
-    antiguedad = db.Column(db.Integer, nullable=True)
     fecha_ingreso = db.Column(db.String(20), nullable=True)
+    antiguedad = db.Column(db.Integer, nullable=True)
+    vacaciones = db.Column(db.Integer, nullable=False)
+    pendientes = db.Column(db.Integer, nullable=True)
+    sueldo = db.Column(db.Integer, nullable=False)
+    puesto = db.Column(db.String(100), nullable=False)
     sanciones = db.Column(db.Text, nullable=True)  # ✅ NUEVO CAMPO
     referencias = db.Column(db.Text, nullable=True)  # ✅ NUEVO CAMPO
+    trayectoria = db.Column(db.Text, nullable=True)  # ✅ NUEVO CAMPO
+    cursos = db.Column(db.Text, nullable=True)  # ✅ NUEVO CAMPO
+    
 
 class UsuarioRRHH(db.Model):
     __tablename__ = "usuarios_rrhh"
