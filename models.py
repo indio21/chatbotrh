@@ -14,6 +14,10 @@ class Empleado(db.Model):
     fecha_ingreso = db.Column(db.String(20), nullable=True)
     sanciones = db.Column(db.Text, nullable=True)  # ✅ NUEVO CAMPO
     referencias = db.Column(db.Text, nullable=True)  # ✅ NUEVO CAMPO
+    pendientes = db.Column(db.Integer, nullable=True)
+    cursos = db.Column(db.Text, nullable=True)  # ✅ NUEVO CAMPO
+    trayectoria = db.Column(db.Text, nullable=True)  # ✅ NUEVO CAMPO
+    puesto = db.Column(db.Text, nullable=True)  # ✅ NUEVO CAMPO
 
 class UsuarioRRHH(db.Model):
     __tablename__ = "usuarios_rrhh"

@@ -1,0 +1,3 @@
+echo. > backend/__init__.py
+
+taskkill /F /IM python.exe
