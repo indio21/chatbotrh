@@ -3,5 +3,6 @@ flask_sqlalchemy
 jinja2
 gunicorn
 pandas
+openpyxl
 werkzeug
 python-dotenv
