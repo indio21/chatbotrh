@@ -4,3 +4,5 @@ jinja2
 gunicorn
 werkzeug
 python-dotenv
+pandas
+openpyxl
