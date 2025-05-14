@@ -12,15 +12,15 @@ def get_chat_response(user_input):
         if not empleado:
             return "No pude encontrar tus datos en el sistema."
 
-        if "vacaciones" in pregunta or "licencia" in pregunta or "corresponden" in pregunta:
-            return f"Por tu antigüedad, te corresponden {empleado.vacaciones} días de vacaciones."
+        if any(p in pregunta for p in ["disponibles","pendientes","tomarme","dispongo","vacaciones","licencias",""]): #dias diponibles de vacaciones
+            return f"Por tu antigüedad, te corresponden {empleado.vacaciones} días de vacaciones. Tienes disponibles {empleado.pendientes} días de vacaciones ."
         elif any(p in pregunta for p in ["disponibles","pendientes","tomarme","dispongo"]): #dias diponibles de vacaciones
                     return f"Actualmente {empleado.nombre}, cuentas con {empleado.pendientes} días de vacaciones disponibles."
         elif any(p in pregunta for p in ["puesto","cargo","funcion","trabajo","puesto de trabajo","lugar"]): #puesto
             return f"Tu puesto actualmente es el de  {empleado.puesto}."
         # elif "sueldo" in pregunta or "cobro" in pregunta:
         elif any(p in pregunta for p in ["sueldo","cobro","renumeracion","renumeración","plata","dinero","salario","cobré"]):
-            return f"Tu sueldo es de ${empleado.sueldo}."
+            return f"Su renumeración es de ${empleado.sueldo}."
         # elif "antiguedad" in pregunta or "años" in pregunta:
         elif any(p in pregunta for p in ["antiguedad","tiempo","estoy","periodo","antigüedad"]):
             return f"{empleado.nombre}, tu antigüedad en la empresa es de {empleado.antiguedad} años."
@@ -32,9 +32,9 @@ def get_chat_response(user_input):
             return f"Sus referencias laborales son: {empleado.referencias}."
         elif any(p in pregunta for p in ["sanciones","multas","suspendido","suspension","sancion","sanción","sancionado"]):
             return f"Sus sanciones son: {empleado.sanciones}."
-        elif any(p in pregunta for p in ["gremio","gremial","trabajador","sindicato","sindical","día gremial"]):
+        elif any(p in pregunta for p in ["gremio","gremial","trabajador","sindicato","sindical"]):
             return f"Se considera como 'Día del Trabajador del Automotor' los días 24 de Febrero."
-        elif any(p in pregunta for p in ["nacimiento","paternidad","maternidad","papá","mamá","hijo"]):
+        elif any(p in pregunta for p in ["nacimiento","paternidad","maternidad","papá","mamá","hijo","nacido","bebé"]):
             return f"Por nacimiento de hijos/as: El personal masculino tendrá derecho a tres (3) días de licencia extraordinaria (Art. 7° Ley 18.338)."
         elif "mudanza" in pregunta or "domicilio" in pregunta or "mudo" in pregunta:
             return f"El establecimiento otorgará un (1) día de permiso pago al personal que deba mudarse de vivienda, con excepción de aquellos que vivan en hotel o pensión."
@@ -52,11 +52,9 @@ def get_chat_response(user_input):
                 cambio_empleado = anterior_id and anterior_id != emp.id
                 mensaje_intro = f"Ahora hablando de {emp.nombre}. " if cambio_empleado else ""
 
-                if "vacaciones" in pregunta or "licencia" in pregunta or "dispone" in pregunta: #vacaciones
-                    return f"A {emp.nombre}  con respecto a su antigüedad, le corresponden {emp.vacaciones} días de vacaciones."
-                elif any(p in pregunta for p in ["disponibles","pendientes","tomarse","quedan"]): #dias diponibles de vacaciones
-                    return f"{emp.nombre} tiene disponibles {emp.pendientes} días de vacaciones."
-                elif "gremio" in pregunta or "gremial" in pregunta or "día gremial" in pregunta: #dia gremial
+                if any(p in pregunta for p in ["disponibles","pendientes","tomarse","quedan","licencia","vacaciones","dispone"]): #dias diponibles de vacaciones
+                    return f"A {emp.nombre}  con respecto a su antigüedad, le corresponden {emp.vacaciones} días de vacaciones y tiene disponibles {emp.pendientes} días de vacaciones."
+                elif "gremio" in pregunta or "gremial" in pregunta or "sindicato" in pregunta or "automotor" in pregunta or "sindical" in pregunta: #dia gremial
                     return f"Se considera como 'Dia del Trabajador del Automotor' los días 24 de Febrero."      #sueldo
                 elif any(p in pregunta for p in ["sueldo","cobro","renumeracion","renumeración","plata","dinero","cobra","salario","cobró"]):
                     return f"La renumeración de {emp.nombre} actualmente es de ${emp.sueldo}."
@@ -75,8 +73,10 @@ def get_chat_response(user_input):
                     return f"Trayectoria: {emp.trayectoria}." if emp.trayectoria else "No registra trayectoria." #trayectoria
                 elif any(p in pregunta for p in ["cursos","curso","capacitación","capacitaciones","cursos realizados","formación","charlas","contenido"]): #cursos
                     return f"Capacitaciones: {emp.cursos}." if emp.cursos else "No registra cursos."
-                elif "mudanza" in pregunta or "permiso" in pregunta:    #permiso mudanza
+                elif any(p in pregunta for p in ["mudanza","vivienda","mudo","domicilio"]): #cursos
                     return f"El establecimiento otorgará un (1) día de permiso pago al personal que deba mudarse de vivienda, con excepción de aquellos que vivan en hotel o pensión."
+                elif any(p in pregunta for p in ["nacimiento","paternidad","maternidad","papá","mamá","hijo","nacido","bebé"]):
+                    return f"Por nacimiento de hijos/as: El personal masculino tendrá derecho a tres (3) días de licencia extraordinaria (Art. 7° Ley 18.338)."
                 else:
                     return f"{mensaje_intro}Podés preguntarme sobre vacaciones, días disponibles de vacaciones, puesto, sueldo, antigüedad, fecha de ingreso, sanciones, referencias laborales, trayectoria y cursos {emp.nombre}."
 
@@ -85,11 +85,9 @@ def get_chat_response(user_input):
         if empleado_id_contexto:
             emp = Empleado.query.get(empleado_id_contexto)
             if emp:
-                if "vacaciones" in pregunta or "licencia" in pregunta or "dispone" in pregunta: #vacaciones
-                    return f"Entiendo que sigues hablando de {emp.nombre}. {emp.nombre}  con respecto a su antigüedad, le corresponden {emp.vacaciones} días de vacaciones."
-                elif any(p in pregunta for p in ["disponibles","pendientes","tomarse","quedan"]): #dias diponibles de vacaciones
-                    return f"Entiendo que sigues hablando de {emp.nombre}. {emp.nombre} tiene disponibles {emp.pendientes} días de vacaciones."
-                elif "gremio" in pregunta or "gremial" in pregunta or "día gremial" in pregunta: #dia gremial
+                if any(p in pregunta for p in ["disponibles","pendientes","tomarse","quedan","vacaciones","licencia","dispone"]): #dias diponibles de vacaciones
+                    return f"Entiendo que sigues hablando de {emp.nombre}. {emp.nombre}  con respecto a su antigüedad, le corresponden {emp.vacaciones} días de vacaciones y tiene disponibles {emp.pendientes} días de vacaciones"
+                elif "gremio" in pregunta or "gremial" in pregunta or "sindicato" in pregunta or "sindical" in pregunta: #dia gremial
                     return f"Se considera como 'Dia del Trabajador del Automotor' los días 24 de Febrero."      #sueldo
                 elif any(p in pregunta for p in ["sueldo","cobro","renumeracion","renumeración","plata","dinero","cobra","salario","cobró"]):
                     return f"Entiendo que sigues hablando de {emp.nombre}. La renumeración de {emp.nombre} actualmente es de ${emp.sueldo}."
@@ -110,6 +108,8 @@ def get_chat_response(user_input):
                     return f"Capacitaciones: {emp.cursos}." if emp.cursos else "No registra cursos."
                 elif "mudanza" in pregunta or "permiso" in pregunta:    #permiso mudanza
                     return f"El establecimiento otorgará un (1) día de permiso pago al personal que deba mudarse de vivienda, con excepción de aquellos que vivan en hotel o pensión."
+                elif any(p in pregunta for p in ["nacimiento","paternidad","maternidad","papá","mamá","hijo","nacido","bebé"]):
+                    return f"Por nacimiento de hijos/as: El personal masculino tendrá derecho a tres (3) días de licencia extraordinaria (Art. 7° Ley 18.338)."
                 else:
                     return f"{mensaje_intro}Podés preguntarme sobre vacaciones, días disponibles de vacaciones, puesto, sueldo, antigüedad, fecha de ingreso, sanciones, referencias laborales, trayectoria y cursos {emp.nombre}."
 
