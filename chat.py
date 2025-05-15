@@ -11,8 +11,7 @@ def get_chat_response(user_input):
         empleado = Empleado.query.get(empleado_id)
         if not empleado:
             return "No pude encontrar tus datos en el sistema."
-
-        if any(p in pregunta for p in ["disponibles","pendientes","tomarme","dispongo","vacaciones","licencias",""]): #dias diponibles de vacaciones
+        elif  any(p in pregunta for p in ["disponibles","pendientes","tomarme","dispongo","vacaciones","licencias"]): #dias diponibles de vacaciones
             return f"Por tu antigüedad, te corresponden {empleado.vacaciones} días de vacaciones. Tienes disponibles {empleado.pendientes} días de vacaciones ."
         elif any(p in pregunta for p in ["disponibles","pendientes","tomarme","dispongo"]): #dias diponibles de vacaciones
                     return f"Actualmente {empleado.nombre}, cuentas con {empleado.pendientes} días de vacaciones disponibles."
@@ -26,11 +25,11 @@ def get_chat_response(user_input):
             return f"{empleado.nombre}, tu antigüedad en la empresa es de {empleado.antiguedad} años."
         elif any(p in pregunta for p in ["ingreso", "entraste", "inicié","comencé", "empezaste","entré","ingrese","ingresé","arranqué"]):
             return f"{empleado.nombre}, ingresaste a la empresa el {empleado.fecha_ingreso}." #ingreso
-        elif any(p in pregunta for p in ["cursos","curso","capacitación","capacitaciones","cursos realizados","formación","charlas","contenido"]): #cursos
+        elif any(p in pregunta for p in ["cursos","curso","capacitación","capacitaciones","capacitacion","cursos realizados","formación","charlas","contenido"]): #cursos
             return f"Capacitaciones: {empleado.cursos}." if empleado.cursos else "Usted no registra cursos."
         elif any(p in pregunta for p in ["referencias","laborales","recomendaciones","referencia","trayectoria","observaciones","legajo"]):
             return f"Sus referencias laborales son: {empleado.referencias}."
-        elif any(p in pregunta for p in ["sanciones","multas","suspendido","suspension","sancion","sanción","sancionado"]):
+        elif any(p in pregunta for p in ["sanciones","multas","suspendido","suspension","sancion","sanción","sancionado","suspensión"]):
             return f"Sus sanciones son: {empleado.sanciones}."
         elif any(p in pregunta for p in ["gremio","gremial","trabajador","sindicato","sindical"]):
             return f"Se considera como 'Día del Trabajador del Automotor' los días 24 de Febrero."
@@ -71,7 +70,7 @@ def get_chat_response(user_input):
                     return f"{mensaje_intro}{emp.nombre} ingresó el {emp.fecha_ingreso}." #ingreso
                 elif any(p in pregunta for p in ["trayectoria","trayectorias","trayectoria laboral","camino","ascenso","ascensos","puestos que estuvo"]): #trayectoria
                     return f"Trayectoria: {emp.trayectoria}." if emp.trayectoria else "No registra trayectoria." #trayectoria
-                elif any(p in pregunta for p in ["cursos","curso","capacitación","capacitaciones","cursos realizados","formación","charlas","contenido"]): #cursos
+                elif any(p in pregunta for p in ["cursos","curso","capacitación","capacitaciones","cursos realizados","formación","charlas","contenido","capacitacion","formacion"]): #cursos
                     return f"Capacitaciones: {emp.cursos}." if emp.cursos else "No registra cursos."
                 elif any(p in pregunta for p in ["mudanza","vivienda","mudo","domicilio"]): #cursos
                     return f"El establecimiento otorgará un (1) día de permiso pago al personal que deba mudarse de vivienda, con excepción de aquellos que vivan en hotel o pensión."
